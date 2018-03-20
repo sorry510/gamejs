@@ -12,7 +12,6 @@ class Paddle extends Block {
 	}
 	move(ctrl) {
 		//ctrl 来自game的控制{left:['a',false], right:['b',false]}
-		log(ctrl);
 		if(this.x < 0) {
 			this.x = 0;
 		} else if(this.x + this.width > 400) {

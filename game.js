@@ -1,3 +1,4 @@
+'user strict'
 class Game {
 	constructor(config) {
 		this.canvas = document.querySelector('#'+config.id);
@@ -5,13 +6,17 @@ class Game {
 		this.actions = [];
 		this.control = {
 			left: ['a', false],
-			right: ['d', false]
+			right: ['d', false],
+			fire:[' ', false]
 		};
-		this.blocks = [];
+		// this.blocks = [];
 	}
-	init(block) {
-		this.blocks.push = block;
-		this.drawRect(block);
+	init(blocks) {
+		var _this = this;
+		blocks.forEach(function(block, index) {
+			// _this.blocks.push = block;
+			_this.drawRect(block);
+		});
 		return this;
 	}
 	setControl(control) {
@@ -33,20 +38,42 @@ class Game {
 		this.ctx.clearRect(x, y, width, height);
 		return this;
 	}
-	update() {
-		var _this = this;
-		blocks.forEach(function(block, index) {
-			_this.drawClear(block);
-			_this.drawRect(block);
-		});
+	update(block, callback) {
+		this.drawClear(block);
+		callback();
+		this.drawRect(block);
+		return this;
 	}
-	registerAction(actions, callback) {
-		var _this = this;
-		actions.forEach(function(action, index) {
-			_this.actions[action] = callback;
-		});
+	border(ball){
+		if(ball.x + ball.width > this.canvas.width || ball.x < 0) {
+			ball.turnSpeedX();
+		} else if (ball.y + ball.height > this.canvas.height || ball.y < 0) {
+			ball.turnSpeedY();
+		}
+		return this;
 	}
-	getActions() {
-		return this.actions;
+	// registerAction(actions, callback) {
+	// 	var _this = this;
+	// 	actions.forEach(function(action, index) {
+	// 		_this.actions[action] = callback;
+	// 	});
+	// }
+	// getActions() {
+	// 	return this.actions;
+	// }
+	collision(o1, o2) {
+		if(o2.x < o1.x + o1.width &&
+			 o2.x + o2.width > o1.x &&
+			 o2.y < o1.y + o1.height &&
+			 o2.y + o2.height > o1.y){
+			return true;
+		}
+		return false;
+	}
+	gameOver(ball) {
+		if(ball.y + ball.height >= this.canvas.height) {
+			return true;
+		}
+		return false;
 	}
 }

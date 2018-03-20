@@ -258,57 +258,88 @@
 </script>
 <script src="blocks.js"></script>
 <script src="paddle.js"></script>
+<script src="ball.js"></script>
 <script src="game.js"></script>
+<script src="level.js"></script>
 <script type="text/javascript">
 	'user strict'
 	var log = console.log.bind(console);
-	;(function(fps) {
+	;(function(fps, num) {
 		var game = new Game({id:'canvas'});
 		var gctrl = game.getControl();
 		var paddle = new Paddle({x:100,y:275,width:200,height:20,speedX:5});
-		// var pctrl = paddle.getControl();
 		var ball = new Ball({x:185,y:255,width:20,height:20, color:'#FFA500'});
-		game.init(paddle).init(ball);
-		game.registerAction([gctrl.left[0], gctrl.right[0]], function(){
-			paddle.move(gctrl);
-		})
+		var bricks = [];
+		game.init([paddle, ball]);
+		var level = levels[num];
+		for(var i = 0; i< level.length; i++) {
+			bricks.push(new Brick({
+				x:level[i][0],
+				y:level[i][1],
+				width:50,
+				height:20,
+				color:'blue',
+				alives:level[i][2]
+			}))
+		}
+		log(bricks)
+		game.init(bricks);
+		// game.registerAction([gctrl.left[0], gctrl.right[0]], function(){
+		// 	paddle.move(gctrl);
+		// })
 		// log(game.getActions()['a']);
 		window.addEventListener('keydown', function(e) {
-			for(var key in game.getActions()){
-				if(key == gctrl.left[0]) {
-					gctrl.left[1] = true;
-					game.getActions()[key]();
-				}
+			switch(e.key)
+			{
+				case gctrl.left[0]:
+					gctrl.left[1] = true; break;
+				case gctrl.right[0]:
+					gctrl.right[1] = true; break;
+				case gctrl.fire[0]:
+					gctrl.fire[1] = true; break;
+				default:
 			}
-			log(paddle);
 		})
-
-		// window.addEventListener('keydown', function(e) {
-		// 	switch(e.key)
-		// 	{
-		// 		case pctrl.left[0]:
-		// 			pctrl.left[1] = true; break;
-		// 		case pctrl.right[0]:
-		// 			pctrl.right[1] = true; break;
-		// 		default:
-		// 	}
-		// })
-		// window.addEventListener('keyup', function(e) {
-		// 	switch(e.key)
-		// 	{
-		// 		case pctrl.left[0]:
-		// 			pctrl.left[1] = false; break;
-		// 		case pctrl.right[0]:
-		// 			pctrl.right[1] = false; break;
-		// 		default:
-		// 	}
-		// })
-		// setInterval(function() {
-		// 	game.update(paddle, function(){
-		// 		paddle.move();
-		// 	});
-		// }, 1000/fps)
-	})(30)
+		window.addEventListener('keyup', function(e) {
+			switch(e.key)
+			{
+				case gctrl.left[0]:
+					gctrl.left[1] = false; break;
+				case gctrl.right[0]:
+					gctrl.right[1] = false; break;
+				default:
+			}
+		})
+		window.timer = setInterval(function() {
+			game.update(paddle, function(){
+				paddle.move(gctrl);
+			})
+			.update(ball, function(){
+				ball.move(gctrl.fire[1]);
+			})
+			.border(ball);
+			if(game.collision(paddle, ball)) {
+				ball.turnSpeedY();
+			}
+			bricks.forEach(function(elem, index) {
+				if(game.collision(elem, ball)) {
+					ball.turnSpeedY();
+					if(elem.life() < 1) {
+						game.drawClear(elem);
+						bricks.splice(index--, 1);
+					}
+				}
+			});
+			if(game.gameOver(ball)) {
+				alert('game over !');
+				clearTimeout(window.timer);
+			}
+			if(bricks.length < 1){
+				alert('success !');
+				clearTimeout(window.timer);
+			}
+		}, 1000/fps)
+	})(30, 2);
 </script>
 </body>
 </html>

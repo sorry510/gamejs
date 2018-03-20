@@ -8,13 +8,17 @@ class Block {
 		this.color = config.color || '#000000';
 	}
 	test() {
-		log('move');
+		log('test');
 	}
 }
-class Ball extends Block {
-	
-}
-class brick extends Block {
-	
+class Brick extends Block {
+	constructor(config) {
+		super(config);
+		this.alives = config.alives || 1;
+	}
+	life(){
+		this.alives --;
+		return this.alives;
+	}
 }
 
