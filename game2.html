@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible">
+	<title>打砖块</title>
+	<link rel="stylesheet" href="">
+	<style type="text/css">
+		#container{
+			width:100%;
+			text-align:center;
+		}
+		#canvas{
+			border:1px solid red;
+		}
+	</style>
+</head>
+<body>
+<div id="container">
+	<canvas id="canvas" width="400" height="300"></canvas>
+</div>
+<script type="text/javascript">
+	// function inherit(Child, Parent) {
+	// 	var F = function(){};
+	// 	F.prototype = Parent.prototype;
+	// 	Child.prototype = new F();
+	// 	Child.prototype.constructor = Child
+	// 	Child.uber = Parent.prototype;
+	// }
+	// var Game = function() {
+	// 	this.canvas = document.getElementById('canvas');
+	// 	this.ctx = canvas.getContext('2d');
+	// 	this.brick = [];
+	// 	this._event = {};
+	// 	this.time = 1;
+	// }
+	// Game.prototype = {
+	// 	draw: function(o) {
+	// 		var _this = this;
+	// 		o.img.onload = function(){
+	// 			_this.ctx.drawImage(o.img, o.X, o.Y);
+	// 		}
+	// 		_this.ctx.drawImage(o.img, o.X, o.Y);
+	// 		return this;
+	// 	},
+	// 	clear: function(o) {
+	// 		var X = o.X || 0;
+	// 		var Y = o.Y || 0;
+	// 		var width = o.img.width || this.canvas.width;
+	// 		var height = o.img.height || this.canvas.height;
+	// 		this.ctx.clearRect(X, Y, width, height);
+	// 		return this;
+	// 	},
+	// 	registerAction: function(action, callback) {
+	// 		this._event[action] = callback;
+	// 	},
+	// 	getEvent: function() {
+	// 		return this._event;
+	// 	},
+	// 	border: function(o) {
+	// 		if(o.X + o.img.width > this.canvas.width || o.X < 0) {
+	// 			o.speedX *= -1;
+	// 		} else if (o.Y + o.img.height > this.canvas.height || o.Y < 0) {
+	// 			o.speedY *= -1;
+	// 		}
+	// 		return this;
+	// 	},
+	// 	collision: function(o1, o2) {
+	// 		if(o2.X < o1.X + o1.img.width &&
+	// 			 o2.X + o2.img.width > o1.X &&
+	// 			 o2.Y < o1.Y + o1.img.height &&
+	// 			 o2.Y + o2.img.height > o1.Y){
+	// 			return true;
+	// 		}
+	// 		return false;
+	// 	},
+	// 	gameOver: function(ball) {
+	// 		if(ball.Y + ball.img.height > this.canvas.height) {
+	// 			return true;
+	// 		}
+	// 		return false;
+	// 	},
+	// 	gameSuccess: function() {
+	// 		if(this.brick.length == 0) {
+	// 			return true;
+	// 		}
+	// 		return false;
+	// 	}
+	// }
+	// var O = function(config) {
+	// 	this.config = config;
+	// }
+	// O.prototype = {
+	// 	init: function() {
+	// 		for(var key in this.config) {
+	// 			this[key] = this.config[key];
+	// 		}
+	// 		this.X = this.X || 0;
+	// 		this.Y = this.Y || 0;
+	// 		this.speedX = this.speedX || 0;
+	// 		this.speedY = this.speedY || 0;
+	// 		this.left = -1;
+	// 		this.right = 1;
+	// 		this.stateX = false;
+	// 		this.stateY = false;
+	// 		this.img = new Image();
+	// 		this.img.src = this.src || 'normal.png';
+	// 	},
+	// 	moveX: function(direction) {
+	// 		this.stateX = true;
+	// 		if(direction == this.left) {
+	// 			this.speedX = -Math.abs(this.speedX);
+	// 		} else {
+	// 			this.speedX = Math.abs(this.speedX);
+	// 		}
+	// 		return this;
+	// 	},
+	// 	doMoveX: function() {
+	// 		if(this.stateX) {
+	// 			this.X += this.speedX;
+	// 		}
+	// 		return this;
+	// 	},
+	// 	doStopX: function() {
+	// 		this.stateX = false;
+	// 		return this;
+	// 	},
+	// };
+	// var Paddle = function(config) {
+	// 	this.config = config;
+	// 	this.init();
+	// }
+	// inherit(Paddle, O);
+	// var Ball = function(config) {
+	// 	this.config = config;
+	// 	this.stateX = false;
+	// 	this.stateY = false;
+	// 	this.addSpeedX = 10;
+	// 	this.init();
+	// }
+	// inherit(Ball, O);
+	// Ball.prototype.fire = function() {
+	// 	this.stateX = true;
+	// 	this.stateY = true;
+	// };
+	// Ball.prototype.start = function() {
+	// 	if(this.stateY == false) {
+	// 		return false;
+	// 	}
+	// 	return true;
+	// };
+	// Ball.prototype.MoveY = function(direction) {
+	// 	if(direction == this.down) {
+	// 		this.speedY = Math.abs(this.speedY); 
+	// 	} else {
+	// 		this.speedY = -Math.abs(this.speedY); 
+	// 	}
+	// 	return this;
+	// };
+	// Ball.prototype.doMoveY = function() {
+	// 	if(this.stateY) {
+	// 		this.Y += this.speedY; 
+	// 	}
+	// 	return this;
+	// };
+	// Ball.prototype.change = function(paddle) {
+	// 	this.speedX += paddle.speedX/this.addSpeedX;
+	// 	this.speedY *= -1;
+	// };
+	// var Brick = function(config) {
+	// 	this.config = config;
+	// 	this.state = true;
+	// 	this.init();
+	// }
+	// inherit(Brick, O);
+	// Brick.prototype.disappear = function() {
+	// 	this.state = false;
+	// };
+	// Brick.prototype.isset = function() {
+	// 	return this.state;
+	// };
+
+	// (function() {
+	// 	var paddle = new Paddle({src:'paddle2.png',X:50,Y:586,speedX:5});
+	// 	var ball = new Ball({src:'ball.png',X:190,Y:566,speedX:5, speedY:-5});
+	// 	var game = new Game();
+	// 	for(var i = 0; i<200; i++) {
+	// 		var x = Math.floor(i % 10);
+	// 		var y =  Math.floor(i / 10);
+	// 		game.brick.push(new Brick({
+	// 			src: 'brick2.png',
+	// 			X: x * 41 + 5,
+	// 			Y: y * 16 + 5
+	// 		}));
+	// 	}
+	// 	game.draw(paddle).draw(ball);
+	// 	game.brick.forEach(function(v, k) {
+	// 		game.draw(v);
+	// 	})
+	// 	game.registerAction('a', function(){
+	// 		paddle.moveX(paddle.left);
+	// 		if(!ball.start()) {
+	// 			ball.moveX(ball.left);
+	// 		}
+	// 	})
+	// 	game.registerAction('d', function(){
+	// 		paddle.moveX(paddle.right);
+	// 		if(!ball.start()) {
+	// 			ball.moveX(ball.right);
+	// 		}
+	// 	})
+	// 	game.registerAction(' ', function(){
+	// 		ball.fire();
+	// 	})
+
+	// 	document.addEventListener('keydown', function(e) {
+	// 		var event = game.getEvent();
+	// 		for(var key in event) {
+	// 			if(key == e.key) {
+	// 				event[key]();
+	// 			}
+	// 		}
+	// 	})
+	// 	document.addEventListener('keyup', function(e) {
+	// 		paddle.doStopX();
+	// 		if(!ball.start()) {
+	// 			ball.doStopX();
+	// 		}
+	// 	});
+	// 	window.timer = setInterval(function() {
+	// 		game.clear(paddle).draw(paddle.doMoveX());
+	// 		game.clear(ball).draw(ball.doMoveX().doMoveY()).border(ball);
+	// 		game.brick.forEach(function(v, k) {
+	// 			if(v.isset()) {
+	// 				if(game.collision(v, ball)) {
+	// 					v.disappear();
+	// 					game.clear(v);
+	// 				} else {
+	// 					game.draw(v);
+	// 				}
+	// 			} else {
+	// 				game.brick.splice(k, 1);
+	// 			}
+	// 		})
+	// 		if(game.collision(paddle, ball)) {
+	// 			ball.change(paddle);
+	// 		}
+	// 		if(game.gameOver(ball)) {
+	// 			alert('game over !')
+	// 			clearTimeout(window.timer);
+	// 		}
+	// 		if(game.gameSuccess()){
+	// 			alert('success !');
+	// 			clearTimeout(window.timer);
+	// 		}
+	// 	}, 1000/60);
+	// })();
+</script>
+<script src="blocks.js"></script>
+<script src="paddle.js"></script>
+<script src="game.js"></script>
+<script type="text/javascript">
+	'user strict'
+	var log = console.log.bind(console);
+	;(function(fps) {
+		var game = new Game({id:'canvas'});
+		var gctrl = game.getControl();
+		var paddle = new Paddle({x:100,y:275,width:200,height:20,speedX:5});
+		// var pctrl = paddle.getControl();
+		var ball = new Ball({x:185,y:255,width:20,height:20, color:'#FFA500'});
+		game.init(paddle).init(ball);
+		game.registerAction([gctrl.left[0], gctrl.right[0]], function(){
+			paddle.move(gctrl);
+		})
+		// log(game.getActions()['a']);
+		window.addEventListener('keydown', function(e) {
+			for(var key in game.getActions()){
+				if(key == gctrl.left[0]) {
+					gctrl.left[1] = true;
+					game.getActions()[key]();
+				}
+			}
+			log(paddle);
+		})
+
+		// window.addEventListener('keydown', function(e) {
+		// 	switch(e.key)
+		// 	{
+		// 		case pctrl.left[0]:
+		// 			pctrl.left[1] = true; break;
+		// 		case pctrl.right[0]:
+		// 			pctrl.right[1] = true; break;
+		// 		default:
+		// 	}
+		// })
+		// window.addEventListener('keyup', function(e) {
+		// 	switch(e.key)
+		// 	{
+		// 		case pctrl.left[0]:
+		// 			pctrl.left[1] = false; break;
+		// 		case pctrl.right[0]:
+		// 			pctrl.right[1] = false; break;
+		// 		default:
+		// 	}
+		// })
+		// setInterval(function() {
+		// 	game.update(paddle, function(){
+		// 		paddle.move();
+		// 	});
+		// }, 1000/fps)
+	})(30)
+</script>
+</body>
+</html>
