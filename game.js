@@ -5,9 +5,11 @@ class Game {
 		this.ctx = this.canvas.getContext('2d');
 		this.actions = [];
 		this.control = {
+			fps: 120,
 			left: ['a', false],
 			right: ['d', false],
-			fire:[' ', false]
+			fire:[' ', false],
+			pause:['p', false]
 		};
 		// this.blocks = [];
 	}
@@ -62,6 +64,7 @@ class Game {
 	// 	return this.actions;
 	// }
 	collision(o1, o2) {
+		//没有区别左右还是上下碰撞
 		if(o2.x < o1.x + o1.width &&
 			 o2.x + o2.width > o1.x &&
 			 o2.y < o1.y + o1.height &&
@@ -71,7 +74,7 @@ class Game {
 		return false;
 	}
 	gameOver(ball) {
-		if(ball.y + ball.height >= this.canvas.height) {
+		if(ball.y + ball.height >= this.canvas.height + 1) {
 			return true;
 		}
 		return false;
